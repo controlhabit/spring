@@ -12,7 +12,8 @@ import java.sql.Timestamp;
 @Table(name="user_tb")
 
 public class User {
-    @Id    
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "u_id")
     private String userId;
 

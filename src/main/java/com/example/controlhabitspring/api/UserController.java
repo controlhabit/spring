@@ -4,14 +4,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.logging.Logger;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -32,10 +34,33 @@ import org.apache.commons.lang3.StringUtils;
 @RequestMapping("/api/user")
 public class UserController {
 
-    Logger LOG = Logger.getGlobal();
-
     @Autowired
     UserService service;
+
+    @PostMapping("")
+    public ResponseEntity<? extends BasicResponse> insert(@RequestBody User item) {
+        User result = service.insert(item);
+
+        if (result == null) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorResponse("이미 등록된 이메일입니다"));
+        }
+
+        return ResponseEntity.ok().body(new CommonResponse<User>(result));
+    }
+
+    @PutMapping("{id}")
+    public ResponseEntity<? extends BasicResponse> update(@PathVariable String id, @RequestBody User item) {
+        Optional<User> opt = service.findById(id);
+
+        if (!opt.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse("데이터를 찾을수가 없습니다"));
+        }
+
+        item.setUserId(id);
+
+        User result = service.update(item);
+        return ResponseEntity.ok().body(new CommonResponse<User>(result));
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<? extends BasicResponse> findById(@PathVariable String id) {
