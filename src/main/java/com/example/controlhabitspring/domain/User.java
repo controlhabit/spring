@@ -26,6 +26,6 @@ public class User {
     private String userName;
 
     @Column(name = "u_date")
-    private Timestamp updateDttm;
+    private Timestamp userDate;
     
 }

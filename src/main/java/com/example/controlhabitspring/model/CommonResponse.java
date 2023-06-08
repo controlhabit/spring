@@ -19,9 +19,11 @@ public class CommonResponse<T> extends BasicResponse {
         this.code = HttpStatus.OK;
         this.data = data;
         if (data instanceof List) {
-            this.count = ((List<?>)data).size();
-        } else {
-            this.count = ((Page<?>) data).getNumberOfElements();
+            this.count = ((List<?>) data).size();
+        } else if (data instanceof Page) {
+			this.count = ((Page<?>) data).getNumberOfElements();
+		} else {
+            this.count = 1;
         }
     }
     
