@@ -78,8 +78,12 @@ public class UserService {
         repository.delete(item);
     }
 
-     public Optional<User> findById(String userId) {
+    public Optional<User> findById(String userId) {
         return repository.findByUserId(userId);
+    }
+    
+    public Optional<User> findByEmail(String userEmail) {
+        return repository.findByUserEmail(userEmail);
     }
 
     public Page<User> findAll(Map<SearchKey, Object> searchKeys, String order, int page, int size) {
