@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -59,7 +60,23 @@ public class UserController {
         item.setUserId(id);
 
         User result = service.update(item);
+        System.out.println(result);
         return ResponseEntity.ok().body(new CommonResponse<User>(result));
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<? extends BasicResponse> delete(@PathVariable String id) {
+        Optional<User> opt = service.findById(id);
+
+
+        if (!opt.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse("데이터를 찾을수가 없습니다"));
+        }
+
+        service.delete(opt.get());
+
+        // return ResponseEntity.ok().body(new CommonResponse<User>());
+        return ResponseEntity.ok().body(new CommonResponse<String>("Delete Complete"));
     }
 
     @GetMapping("/{id}")

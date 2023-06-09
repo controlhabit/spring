@@ -30,11 +30,11 @@ public class UserService {
 
     @Transactional
     public User insert(User item) {
-        // Optional<User> opt = repository.findByUserId(item.getUserId());
+        Optional<User> opt = repository.findByUserId(item.getUserId());
 
-        // if (opt.isPresent()) {
-        //     return null;
-        // }
+        if (opt.isPresent()) {
+            return null;
+        }
 
         /*
         String passwd = sha256(item.getUserPw());
@@ -71,6 +71,11 @@ public class UserService {
         item.setUserDate(timestamp);
 
         return repository.save(item);
+    }
+
+     @Transactional
+    public void delete(User item) {
+        repository.delete(item);
     }
 
      public Optional<User> findById(String userId) {
